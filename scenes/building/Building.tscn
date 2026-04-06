@@ -1,3 +1,10 @@
 [gd_scene format=3 uid="uid://6xk238t18evb"]
 
+[ext_resource type="Texture2D" uid="uid://b44xgthmi48gd" path="res://assets/Tiny Swords (Update 010)/Factions/Knights/Buildings/Tower/Tower_Blue.png" id="1_3pxxx"]
+
 [node name="Building" type="Node2D" unique_id=612616816]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1027358500]
+texture = ExtResource("1_3pxxx")
+centered = false
+offset = Vector2(-32, -164)
