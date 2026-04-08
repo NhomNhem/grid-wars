@@ -11,7 +11,7 @@ public partial class Main : Node {
     private PackedScene _buildingScene;
     private Button _placeBuildingButton;
 
-    private Vector2? _hoverGridCell;
+    private Vector2I? _hoverGridCell;
 
     public override void _Ready() {
         _buildingScene = GD.Load<PackedScene>("res://scenes/building/Building.tscn");
