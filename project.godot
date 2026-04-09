@@ -15,6 +15,10 @@ run/main_scene="uid://03jp280jsmnq"
 config/features=PackedStringArray("4.6", "C#", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[autoload]
+
+GameEvents="*uid://c1qrp7e8kn4j0"
+
 [display]
 
 window/size/viewport_width=1280
