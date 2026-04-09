@@ -31,13 +31,13 @@ public partial class Main : Node {
 
         if (_cursor.Visible && (!_hoverGridCell.HasValue || _hoverGridCell.Value != gridPosition)) {
             _hoverGridCell = gridPosition;
-            _gridManager.HighLightBuildableTiles();
+            _gridManager.HighlightBuildableTiles();
         }
     }
 
     public override void _UnhandledInput(InputEvent @event) {
         if (_hoverGridCell.HasValue && _cursor.Visible && @event.IsActionPressed("left_click") &&
-            _gridManager.IsTileOccupied(_hoverGridCell.Value)) {
+            _gridManager.IsTilePositionBuildable(_hoverGridCell.Value)) {
             PlaceBuildingAtHoveredCellPosition();
             _cursor.Visible = false;
         }
@@ -50,13 +50,17 @@ public partial class Main : Node {
         AddChild(building);
 
         building.GlobalPosition = _hoverGridCell.Value * 64;
-        _gridManager.MarkTileAsOccupied(_hoverGridCell.Value);
         
         // update tilemap layer to remove highlight
         _hoverGridCell = null;
-        _gridManager.ClearHighLightTiles();
+        _gridManager.ClearHighlightedTiles();
     }
 
 
-    private void OnButtonPressed() => _cursor.Visible = !_cursor.Visible;
+    private void OnButtonPressed() {
+        _cursor.Visible = !_cursor.Visible;
+        if (!_cursor.Visible) {
+            _gridManager.ClearHighlightedTiles();
+        }
+    }
 }

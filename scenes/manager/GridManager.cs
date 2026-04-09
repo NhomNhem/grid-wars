@@ -8,31 +8,31 @@ public partial class GridManager : Node {
     [Export] private TileMapLayer _highLightTileMapLayer;
     [Export] private TileMapLayer _baseTerrainTileMapLayer;
     
-    private readonly HashSet<Vector2> _occupiedCells = new();
+    private readonly HashSet<Vector2I> _validBuildableTiles = new();
 
     public override void _Ready() {
         GameEvents.Instance.BuildingPlaced += OnBuildingPlaced;
     }
-    
-    public bool IsTileOccupied(Vector2I tilePos) {
+
+    private bool IsTilePositionValid(Vector2I tilePos) {
         var customData = _baseTerrainTileMapLayer.GetCellTileData(tilePos);
-        if (customData == null) return false; // treat out of bounds as unoccupied
-        if (!(bool)customData.GetCustomData("buildable")) return false;
-        return !_occupiedCells.Contains(tilePos);
+        if (customData == null) return false; 
+        return (bool)customData.GetCustomData("buildable");
     }
-
-    public void MarkTileAsOccupied(Vector2I tilePos) => _occupiedCells.Add(tilePos);
-
-    public void HighLightBuildableTiles() {
-        ClearHighLightTiles();
-        var buildingComponents =
-            GetTree().GetNodesInGroup(nameof(components.BuildingComponent)).Cast<BuildingComponent>();
-        foreach (var building in buildingComponents) {
-            HighLightValidTilesInRadius(building.GetGridCellPosition(), building.BuildableRadius);
+    
+    public void HighlightBuildableTiles() {
+        ClearHighlightedTiles();
+        foreach (Vector2I tilePos in _validBuildableTiles) {
+            _highLightTileMapLayer.SetCell(tilePos, 0, Vector2I.Zero);
         }
     }
+
+    public void HighLightExpandedBuildableTiles(Vector2I rootCell, int radius) {
+        var validTiles = GetValidTilesInRadius(rootCell, radius);
+        
+    }
     
-    public void ClearHighLightTiles() => _highLightTileMapLayer.Clear();
+    public void ClearHighlightedTiles() => _highLightTileMapLayer.Clear();
 
     public Vector2I GetMouseGridCellPosition() {
         var mouse = _highLightTileMapLayer.GetGlobalMousePosition();
@@ -40,19 +40,31 @@ public partial class GridManager : Node {
         gridPosition = gridPosition.Floor();
         return new Vector2I((int)gridPosition.X, (int)gridPosition.Y);
     }
-    
-    private void HighLightValidTilesInRadius(Vector2I rootCell, int radius) {
+
+    public bool IsTilePositionBuildable(Vector2I tilePos) => _validBuildableTiles.Contains(tilePos);
+
+    private void UpdateValidBuildableTiles(BuildingComponent buildingComponent) {
+        var rootCell = buildingComponent.GetGridCellPosition();
+       
+        var validTiles = GetValidTilesInRadius(rootCell, buildingComponent.BuildableRadius);
+        _validBuildableTiles.UnionWith(validTiles);
+        _validBuildableTiles.Remove(rootCell);
+    }
+
+    private List<Vector2I> GetValidTilesInRadius(Vector2I rootCell, int radius) {
+        var rs = new List<Vector2I>();
+
         for (var x = rootCell.X - radius; x <= rootCell.X + radius; x++)
         for (var y = rootCell.Y - radius; y <= rootCell.Y + radius; y++) {
             var tilePos = new Vector2I(x, y);
-            if (!IsTileOccupied(tilePos)) continue;
-            _highLightTileMapLayer.SetCell(tilePos, 0, Vector2I.Zero);
+            if (!IsTilePositionValid(tilePos)) continue;
+            rs.Add(tilePos);
         }
+        
+        return rs;
     }
     
     private void OnBuildingPlaced(BuildingComponent buildingComponent) {
-        var gridCell = buildingComponent.GetGridCellPosition();
-        MarkTileAsOccupied(gridCell);
-        HighLightBuildableTiles();
+        UpdateValidBuildableTiles(buildingComponent);
     }
 }
