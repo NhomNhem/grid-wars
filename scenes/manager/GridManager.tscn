@@ -2,5 +2,5 @@
 
 [ext_resource type="Script" uid="uid://c2jus1bu175ig" path="res://scenes/manager/GridManager.cs" id="1_ejrrb"]
 
-[node name="GridManager" type="Node" unique_id=1906328968]
+[node name="GridManager" type="Node2D" unique_id=1609759393]
 script = ExtResource("1_ejrrb")

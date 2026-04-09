@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://by7gq3ph611kl" path="res://scenes/Main.cs" id="1_elqb8"]
 [ext_resource type="PackedScene" uid="uid://vlh48nrpv0fg" path="res://scenes/manager/GridManager.tscn" id="2_rarhs"]
 [ext_resource type="TileSet" uid="uid://hkx4wf4r8qwq" path="res://resources/tile-set/highlight_ts.tres" id="2_rvslj"]
+[ext_resource type="PackedScene" uid="uid://duju8ohv2vl2c" path="res://scenes/building/Base.tscn" id="3_c01mt"]
 [ext_resource type="TileSet" uid="uid://dywenhmm3v667" path="res://resources/tile-set/tile_map.tres" id="3_vcsgt"]
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_qnwvq"]
@@ -33,3 +34,6 @@ offset_right = 117.0
 offset_bottom = 647.0
 text = "Place Building
 "
+
+[node name="Base" parent="." unique_id=209765780 instance=ExtResource("3_c01mt")]
+position = Vector2(512, 384)

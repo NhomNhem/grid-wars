@@ -1,8 +1,9 @@
-﻿using Godot;
+﻿using Game.components;
+using Godot;
 
 namespace Game.manager;
 
-public partial class GridManager : Node {
+public partial class GridManager : Node2D {
     [Export] private TileMapLayer _highLightTileMapLayer;
     [Export] private TileMapLayer _baseTerrainTileMapLayer;
     
@@ -16,16 +17,14 @@ public partial class GridManager : Node {
     }
 
     public void MarkTileAsOccupied(Vector2I tilePos) => _occupiedCells.Add(tilePos);
-    
-    public void HighLightValidTilesInRadius(Vector2I rootCell, int radius) {
+
+    public void HighLightBuildableTiles() {
         ClearHighLightTiles();
-        
-        for (var x = rootCell.X - 3; x <= rootCell.X + 3; x++)
-            for (var y = rootCell.Y - 3; y <= rootCell.Y + 3; y++) {
-                var tilePos = new Vector2I(x, y);
-                if (!IsTileOccupied(tilePos)) continue;
-                _highLightTileMapLayer.SetCell(tilePos, 0, Vector2I.Zero);
-            }
+        var buildingComponents =
+            GetTree().GetNodesInGroup(nameof(components.BuildingComponent)).Cast<BuildingComponent>();
+        foreach (var building in buildingComponents) {
+            HighLightValidTilesInRadius(building.GetGridCellPosition(), building.BuildableRadius);
+        }
     }
     
     public void ClearHighLightTiles() => _highLightTileMapLayer.Clear();
@@ -37,4 +36,12 @@ public partial class GridManager : Node {
         return new Vector2I((int)gridPosition.X, (int)gridPosition.Y);
     }
     
+    private void HighLightValidTilesInRadius(Vector2I rootCell, int radius) {
+        for (var x = rootCell.X - 2; x <= rootCell.X + 2; x++)
+        for (var y = rootCell.Y - 2; y <= rootCell.Y + 2; y++) {
+            var tilePos = new Vector2I(x, y);
+            if (!IsTileOccupied(tilePos)) continue;
+            _highLightTileMapLayer.SetCell(tilePos, 0, Vector2I.Zero);
+        }
+    }
 }
