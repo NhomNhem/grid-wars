@@ -21,15 +21,22 @@ public partial class GridManager : Node {
     }
     
     public void HighlightBuildableTiles() {
-        ClearHighlightedTiles();
-        foreach (Vector2I tilePos in _validBuildableTiles) {
-            _highLightTileMapLayer.SetCell(tilePos, 0, Vector2I.Zero);
+        foreach (var tilePositon in _validBuildableTiles) {
+            _highLightTileMapLayer.SetCell(tilePositon, 0, Vector2I.Zero);
         }
     }
 
     public void HighLightExpandedBuildableTiles(Vector2I rootCell, int radius) {
-        var validTiles = GetValidTilesInRadius(rootCell, radius);
+        ClearHighlightedTiles();
+        HighlightBuildableTiles();
         
+        var validTiles = GetValidTilesInRadius(rootCell, radius).ToHashSet();
+        var expandedTiles = validTiles.Except(_validBuildableTiles).Except(GetOccupiedTiles());
+        var atlasCoords = new Vector2I(1, 0);
+        
+        foreach (var tilePos in expandedTiles) {
+            _highLightTileMapLayer.SetCell(tilePos, 0, atlasCoords);
+        }
     }
     
     public void ClearHighlightedTiles() => _highLightTileMapLayer.Clear();
@@ -48,20 +55,26 @@ public partial class GridManager : Node {
        
         var validTiles = GetValidTilesInRadius(rootCell, buildingComponent.BuildableRadius);
         _validBuildableTiles.UnionWith(validTiles);
-        _validBuildableTiles.Remove(rootCell);
+        _validBuildableTiles.ExceptWith(GetOccupiedTiles());
     }
 
     private List<Vector2I> GetValidTilesInRadius(Vector2I rootCell, int radius) {
-        var rs = new List<Vector2I>();
+        var result = new List<Vector2I>();
 
         for (var x = rootCell.X - radius; x <= rootCell.X + radius; x++)
         for (var y = rootCell.Y - radius; y <= rootCell.Y + radius; y++) {
             var tilePos = new Vector2I(x, y);
             if (!IsTilePositionValid(tilePos)) continue;
-            rs.Add(tilePos);
+            result.Add(tilePos);
         }
         
-        return rs;
+        return result;
+    }
+
+    private IEnumerable<Vector2I> GetOccupiedTiles() {
+        var buildingComponents = GetTree().GetNodesInGroup(nameof(BuildingComponent)).Cast<BuildingComponent>();
+        var occupiedTiles = buildingComponents.Select(b => b.GetGridCellPosition());
+        return occupiedTiles;
     }
     
     private void OnBuildingPlaced(BuildingComponent buildingComponent) {

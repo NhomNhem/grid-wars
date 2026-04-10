@@ -5,6 +5,7 @@
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_fqigs"]
 texture = ExtResource("1_mcr4t")
 texture_region_size = Vector2i(64, 64)
+1:0/0 = 0
 0:0/0 = 0
 
 [resource]
