@@ -1,6 +1,7 @@
 [gd_resource type="TileSet" format=3 uid="uid://dywenhmm3v667"]
 
 [ext_resource type="Texture2D" uid="uid://drkgugwdhabcp" path="res://assets/Tiny Swords (Update 010)/Terrain/Ground/Tilemap_Flat.png" id="1_3cdm5"]
+[ext_resource type="Texture2D" uid="uid://cjjn6npnf5ep2" path="res://assets/Tiny Swords (Update 010)/Resources/Trees/Tree.png" id="2_chy75"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_chy75"]
 texture = ExtResource("1_3cdm5")
@@ -102,6 +103,18 @@ texture_region_size = Vector2i(64, 64)
 5:0/0/terrains_peering_bit/bottom_side = 0
 5:0/0/custom_data_0 = true
 
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ieehu"]
+texture = ExtResource("2_chy75")
+texture_region_size = Vector2i(192, 192)
+0:0/animation_columns = 4
+0:0/animation_mode = 1
+0:0/animation_frame_0/duration = 0.15
+0:0/animation_frame_1/duration = 0.15
+0:0/animation_frame_2/duration = 0.15
+0:0/animation_frame_3/duration = 0.15
+0:0/0 = 0
+0:0/0/texture_origin = Vector2i(0, 64)
+
 [resource]
 tile_size = Vector2i(64, 64)
 terrain_set_0/mode = 2
@@ -110,3 +123,4 @@ terrain_set_0/terrain_0/color = Color(0.22352941, 0.9019608, 0.2901961, 1)
 custom_data_layer_0/name = "buildable"
 custom_data_layer_0/type = 1
 sources/0 = SubResource("TileSetAtlasSource_chy75")
+sources/1 = SubResource("TileSetAtlasSource_ieehu")
