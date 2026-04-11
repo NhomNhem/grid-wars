@@ -1,4 +1,5 @@
 using Game.manager;
+using Game.resources.building;
 using Godot;
 
 namespace Game;
@@ -8,30 +9,42 @@ public partial class Main : Node {
     private GridManager _gridManager;
     
     private Sprite2D _cursor;
-    private PackedScene _buildingScene;
-    private Button _placeBuildingButton;
+    private BuildingResource _towerResource;
+    private BuildingResource _villageResource;
+    private Button _placeTowerButton;
+    private Button _placeVillageButton;
+    private Node2D _ySortRoot;
 
+    private BuildingResource _toPlaceBuildingResource;
     private Vector2I? _hoverGridCell;
 
     public override void _Ready() {
-        _buildingScene = GD.Load<PackedScene>("res://scenes/building/Building.tscn");
+        _towerResource = GD.Load<BuildingResource>("res://resources/building/tower.tres");
+        _villageResource = GD.Load<BuildingResource>("res://resources/building/village.tres");
+        
+        
         _gridManager = GetNode<GridManager>("GridManager");
         
         _cursor = GetNode<Sprite2D>("Cursor");
-        _placeBuildingButton = GetNode<Button>("PlaceBuildingButton");
+        _placeTowerButton = GetNode<Button>("PlaceTowerButton");
+        _placeVillageButton = GetNode<Button>("PlaceVillageButton");
+        _ySortRoot = GetNode<Node2D>("YSortRoot");
         
         _cursor.Visible = false;
 
-        _placeBuildingButton.Pressed += OnButtonPressed;
+        _placeTowerButton.Pressed += OnPlaceTowerButtonPressed;
+        _placeVillageButton.Pressed += OnPlaceVillageButtonPressed;
     }
 
     public override void _Process(double delta) {
         var gridPosition = _gridManager.GetMouseGridCellPosition();
         _cursor.GlobalPosition = gridPosition * 64;
 
-        if (_cursor.Visible && (!_hoverGridCell.HasValue || _hoverGridCell.Value != gridPosition)) {
+        if (_toPlaceBuildingResource != null && _cursor.Visible && (!_hoverGridCell.HasValue || _hoverGridCell.Value != gridPosition)) {
             _hoverGridCell = gridPosition;
-            _gridManager.HighLightExpandedBuildableTiles(_hoverGridCell.Value, 3); 
+            _gridManager.ClearHighlightedTiles();
+            _gridManager.HighLightExpandedBuildableTiles(_hoverGridCell.Value, _toPlaceBuildingResource.BuildableRadius); 
+            _gridManager.HighLightResourceTiles(_hoverGridCell.Value, _toPlaceBuildingResource.ResourceRadius);
         }
     }
 
@@ -46,20 +59,28 @@ public partial class Main : Node {
     private void PlaceBuildingAtHoveredCellPosition() {
         if (!_hoverGridCell.HasValue) return;
         
-        var building = _buildingScene.Instantiate<Node2D>();
-        AddChild(building);
+        var building = _toPlaceBuildingResource.BuildingScene.Instantiate<Node2D>();
+        _ySortRoot.AddChild(building);
 
         building.GlobalPosition = _hoverGridCell.Value * 64;
         
-        // update tilemap layer to remove highlight
         _hoverGridCell = null;
         _gridManager.ClearHighlightedTiles();
     }
 
 
-    private void OnButtonPressed() {
-        _cursor.Visible = !_cursor.Visible;
-        if (!_cursor.Visible) _gridManager.ClearHighlightedTiles();
+    private void OnPlaceTowerButtonPressed() {
+        _toPlaceBuildingResource = _towerResource;
+        
+        _cursor.Visible = true;
+        
+        _gridManager.HighlightBuildableTiles();
+    }
+
+    private void OnPlaceVillageButtonPressed() {
+        _toPlaceBuildingResource = _villageResource;
+        
+        _cursor.Visible = true;
         
         _gridManager.HighlightBuildableTiles();
     }

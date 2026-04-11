@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://tdwc8n5ofn8l"]
+
+[ext_resource type="PackedScene" uid="uid://dng0of3yj73ko" path="res://scenes/components/BuildingComponent.tscn" id="1_4iy7f"]
+[ext_resource type="Texture2D" uid="uid://07663f18phlk" path="res://assets/Tiny Swords (Update 010)/Factions/Knights/Buildings/House/House_Blue.png" id="1_gbg78"]
+
+[node name="Village" type="Node2D" unique_id=1009110389]
+y_sort_enabled = true
+
+[node name="BuildingComponent" parent="." unique_id=5179590 instance=ExtResource("1_4iy7f")]
+BuildingResourcePath = "uid://n7fopi35ijhk"
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1269764196]
+y_sort_enabled = true
+position = Vector2(32, 32)
+texture = ExtResource("1_gbg78")
+centered = false
+offset = Vector2(-64, -140)
