@@ -11,7 +11,11 @@ public partial class GridManager : Node {
     [Export] private TileMapLayer _highLightTileMapLayer;
     [Export] private TileMapLayer _baseTerrainTileMapLayer;
 
+    [Signal] public delegate void ResourceTilesUpdatedEventHandler(int collectedTiles);
+    
     private readonly HashSet<Vector2I> _validBuildableTiles = new();
+    private readonly HashSet<Vector2I> _collectResourceTiles = new();
+    
     private List<TileMapLayer> _allTileMapLayers = new();
 
     public override void _Ready() {
@@ -29,9 +33,8 @@ public partial class GridManager : Node {
     }
 
     public void HighlightBuildableTiles() {
-        foreach (var tilePositon in _validBuildableTiles) {
+        foreach (var tilePositon in _validBuildableTiles)
             _highLightTileMapLayer.SetCell(tilePositon, 0, Vector2I.Zero);
-        }
     }
 
     public void HighLightExpandedBuildableTiles(Vector2I rootCell, int radius) {
@@ -41,9 +44,8 @@ public partial class GridManager : Node {
         var expandedTiles = validTiles.Except(_validBuildableTiles).Except(GetOccupiedTiles());
         var atlasCoords = new Vector2I(1, 0);
 
-        foreach (var tilePos in expandedTiles) {
+        foreach (var tilePos in expandedTiles)
             _highLightTileMapLayer.SetCell(tilePos, 0, atlasCoords);
-        }
     }
 
     public void HighLightResourceTiles(Vector2I rootCell, int radius) {
@@ -86,6 +88,17 @@ public partial class GridManager : Node {
         _validBuildableTiles.ExceptWith(GetOccupiedTiles());
     }
 
+    private void UpdateCollectedResourceTiles(BuildingComponent buildingComponent) {
+        var rootCell = buildingComponent.GetGridCellPosition();
+        var resourceTiles = GetResourceTileInRadius(rootCell, buildingComponent.BuildingResource.ResourceRadius);
+        
+        var oldResourceCount = _collectResourceTiles.Count;
+        _collectResourceTiles.UnionWith(resourceTiles);
+        
+        if (oldResourceCount != _collectResourceTiles.Count)
+            EmitSignal(SignalName.ResourceTilesUpdated, _collectResourceTiles.Count);
+    }
+
     private List<Vector2I> GetTilesInRadius(Vector2I rootCell, int radius, Func<Vector2I, bool> filterFn) {
         var result = new List<Vector2I>();
 
@@ -115,5 +128,8 @@ public partial class GridManager : Node {
 
     private void OnBuildingPlaced(BuildingComponent buildingComponent) {
         UpdateValidBuildableTiles(buildingComponent);
+        UpdateCollectedResourceTiles(buildingComponent);
     }
 }
+
+// http://localhost:11434/v1

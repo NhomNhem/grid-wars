@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://csblol2ib6w0u"]
+
+[ext_resource type="Texture2D" uid="uid://07663f18phlk" path="res://assets/Tiny Swords (Update 010)/Factions/Knights/Buildings/House/House_Blue.png" id="1_nu36c"]
+
+[node name="VillageSprite2D" type="Sprite2D" unique_id=1671688955]
+y_sort_enabled = true
+position = Vector2(32, 32)
+texture = ExtResource("1_nu36c")
+centered = false
+offset = Vector2(-64, -140)

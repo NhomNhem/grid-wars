@@ -1,16 +1,22 @@
 [gd_scene format=4 uid="uid://03jp280jsmnq"]
 
 [ext_resource type="Script" uid="uid://by7gq3ph611kl" path="res://scenes/Main.cs" id="1_elqb8"]
+[ext_resource type="PackedScene" uid="uid://xyi1sp33yasw" path="res://scenes/manager/BuildingManager.tscn" id="2_nxtc6"]
 [ext_resource type="PackedScene" uid="uid://vlh48nrpv0fg" path="res://scenes/manager/GridManager.tscn" id="2_rarhs"]
 [ext_resource type="TileSet" uid="uid://hkx4wf4r8qwq" path="res://resources/tile-set/highlight_ts.tres" id="2_rvslj"]
 [ext_resource type="PackedScene" uid="uid://duju8ohv2vl2c" path="res://scenes/building/Base.tscn" id="3_c01mt"]
 [ext_resource type="TileSet" uid="uid://dywenhmm3v667" path="res://resources/tile-set/tile_map.tres" id="3_vcsgt"]
-
-[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_qnwvq"]
-size = Vector2(64, 64)
+[ext_resource type="PackedScene" uid="uid://doag15twpl8f0" path="res://scenes/ui/GameUI.tscn" id="6_c01mt"]
+[ext_resource type="PackedScene" uid="uid://cva78okjkej3o" path="res://scenes/building/BuildingGhost.tscn" id="6_jlsqs"]
 
 [node name="Main" type="Node" unique_id=888678502]
 script = ExtResource("1_elqb8")
+
+[node name="BuildingManager" parent="." unique_id=1603026881 node_paths=PackedStringArray("_gridManager", "_gameUI", "_ySortRoot") instance=ExtResource("2_nxtc6")]
+_gridManager = NodePath("../GridManager")
+_gameUI = NodePath("../GameUI")
+_buildingGhostScene = ExtResource("6_jlsqs")
+_ySortRoot = NodePath("../YSortRoot")
 
 [node name="GridManager" parent="." unique_id=1906328968 node_paths=PackedStringArray("_highLightTileMapLayer", "_baseTerrainTileMapLayer") instance=ExtResource("2_rarhs")]
 _highLightTileMapLayer = NodePath("../HighlightTileMapLayer")
@@ -36,23 +42,4 @@ position = Vector2(512, 384)
 modulate = Color(1, 1, 1, 0.57254905)
 tile_set = ExtResource("2_rvslj")
 
-[node name="Cursor" type="Sprite2D" parent="." unique_id=300557390]
-texture = SubResource("PlaceholderTexture2D_qnwvq")
-centered = false
-
-[node name="PlaceTowerButton" type="Button" parent="." unique_id=1966945910]
-offset_top = 640.0
-offset_right = 128.0
-offset_bottom = 704.0
-text = "Place Tower
-
-"
-
-[node name="PlaceVillageButton" type="Button" parent="." unique_id=680636348]
-offset_left = 192.0
-offset_top = 640.0
-offset_right = 320.0
-offset_bottom = 704.0
-text = "Place Village
-
-"
+[node name="GameUI" parent="." unique_id=1162931020 instance=ExtResource("6_c01mt")]

@@ -1,0 +1,4 @@
+[gd_scene format=3 uid="uid://cva78okjkej3o"]
+
+[node name="BuildingGhost" type="Node2D" unique_id=1825910690]
+y_sort_enabled = true

@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://6xk238t18evb"]
 
-[ext_resource type="Texture2D" uid="uid://b44xgthmi48gd" path="res://assets/Tiny Swords (Update 010)/Factions/Knights/Buildings/Tower/Tower_Blue.png" id="1_3pxxx"]
 [ext_resource type="PackedScene" uid="uid://dng0of3yj73ko" path="res://scenes/components/BuildingComponent.tscn" id="1_sptcu"]
+[ext_resource type="PackedScene" uid="uid://08bh4h0tfo4g" path="res://scenes/building/sprite/TowerSprite2d.tscn" id="2_wos67"]
 
 [node name="Tower" type="Node2D" unique_id=612616816]
 y_sort_enabled = true
@@ -9,8 +9,4 @@ y_sort_enabled = true
 [node name="BuildingComponent" parent="." unique_id=5179590 instance=ExtResource("1_sptcu")]
 BuildingResourcePath = "uid://cudyymjp2sn0t"
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1027358500]
-position = Vector2(32, 32)
-texture = ExtResource("1_3pxxx")
-centered = false
-offset = Vector2(-64, -204)
+[node name="TowerSprite2D" parent="." unique_id=329881807 instance=ExtResource("2_wos67")]
