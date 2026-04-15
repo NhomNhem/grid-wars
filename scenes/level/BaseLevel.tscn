@@ -24,6 +24,8 @@ _ySortRoot = NodePath("../YSortRoot")
 _highLightTileMapLayer = NodePath("../HighlightTileMapLayer")
 _baseTerrainTileMapLayer = NodePath("../YSortRoot/BaseTerrainTileMapLayer")
 
+[node name="GameUI" parent="." unique_id=1162931020 instance=ExtResource("9_7jckg")]
+
 [node name="GameCamera" parent="." unique_id=537982462 instance=ExtResource("5_fjnsi")]
 
 [node name="YSortRoot" type="Node2D" parent="." unique_id=2044056981]
@@ -48,5 +50,3 @@ unique_name_in_owner = true
 [node name="HighlightTileMapLayer" type="TileMapLayer" parent="." unique_id=1371198335]
 modulate = Color(1, 1, 1, 0.57254905)
 tile_set = ExtResource("8_p0gqr")
-
-[node name="GameUI" parent="." unique_id=1162931020 instance=ExtResource("9_7jckg")]
