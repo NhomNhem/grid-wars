@@ -20,11 +20,11 @@ public partial class BuildingManager : Node {
     [Export] private GameUI _gameUI;
     [Export] private PackedScene _buildingGhostScene;
     [Export] private Node2D _ySortRoot;
+    [Export] private int _startingResourceTilesCount = 4;
 
     private Vector2I _hoverGridCell;
     private int _currentResourceTilesCount;
     private int _currentlyUsedResourceTilesCount;
-    private int _startingResourceTilesCount = 4;
     
     private State _currentState = State.Normal;
     private BuildingGhost _buildingGhost;

@@ -7,6 +7,7 @@ namespace Game.manager;
 public partial class GridManager : Node {
     private const string IS_BUILDABLE = "is_buildable";
     private const string IS_WOODED = "is_wood";
+    private const string IS_IGNORE = "is_ignored";
 
     [Export] private TileMapLayer _highLightTileMapLayer;
     [Export] private TileMapLayer _baseTerrainTileMapLayer;
@@ -29,7 +30,7 @@ public partial class GridManager : Node {
     private bool TileHasCustomData(Vector2I tilePos, string customDataName) {
         foreach (var layer in _allTileMapLayers) {
             var customData = layer.GetCellTileData(tilePos);
-            if (customData == null) continue;
+            if (customData == null || (bool)customData.GetCustomData(IS_IGNORE)) continue;
             return (bool)customData.GetCustomData(customDataName);
         }
         return false;
