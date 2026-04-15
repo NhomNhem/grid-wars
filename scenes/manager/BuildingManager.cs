@@ -106,8 +106,8 @@ public partial class BuildingManager : Node {
         var rootCell = _hoverGridArea.Position;
         var buildingComponent = GetTree().GetNodesInGroup(nameof(BuildingComponent))
             .Cast<BuildingComponent>()
-            .FirstOrDefault(buildingComponent => buildingComponent.GetGridCellPosition() == rootCell 
-                                                 && buildingComponent.BuildingResource.IsDeletable );
+            .FirstOrDefault(buildingComponent => buildingComponent.IsTileInBuildingArea(rootCell)
+                                                 && buildingComponent.BuildingResource.IsDeletable);
         if (buildingComponent == null) return;
         
         _currentlyUsedResourceTilesCount -= buildingComponent.BuildingResource.ResourceCost;
