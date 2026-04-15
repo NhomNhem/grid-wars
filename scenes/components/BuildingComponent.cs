@@ -22,4 +22,9 @@ public partial class BuildingComponent : Node2D {
         gridPosition = gridPosition.Floor();
         return new Vector2I((int)gridPosition.X, (int)gridPosition.Y);
     }
+    
+    public void Destroy() {
+        GameEvents.EmitBuildingDestroyed(this);
+        Owner.QueueFree(); // Owner is the BuildingComponents parent node, which is the actual building in the scene. We want to free that when we destroy the building.
+    }
 }

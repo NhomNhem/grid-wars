@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://dbqa7xebp07pv"]
+
+[ext_resource type="Script" uid="uid://b44rpl12thfbe" path="res://scenes/GoldMine.cs" id="1_kv7o6"]
+[ext_resource type="Texture2D" uid="uid://cbg2d4xet48ak" path="res://assets/Tiny Swords (Update 010)/Resources/Gold Mine/GoldMine_Inactive.png" id="1_quw7p"]
+[ext_resource type="Texture2D" uid="uid://fhg1u5dpjiwk" path="res://assets/Tiny Swords (Update 010)/Resources/Gold Mine/GoldMine_Active.png" id="2_gxk0n"]
+
+[node name="GoldMine" type="Node2D" unique_id=103546256]
+y_sort_enabled = true
+script = ExtResource("1_kv7o6")
+_activeTexture = ExtResource("2_gxk0n")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1364350016]
+position = Vector2(32, 32)
+texture = ExtResource("1_quw7p")
+centered = false
+offset = Vector2(-96, -87)

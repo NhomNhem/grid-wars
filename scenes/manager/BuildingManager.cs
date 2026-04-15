@@ -1,4 +1,5 @@
 using Game.building;
+using Game.components;
 using Game.resources.building;
 using Game.ui;
 using Godot;
@@ -86,8 +87,6 @@ public partial class BuildingManager : Node {
                     PlaceBuildingAtHoveredCellPosition();
                 }
                 break;
-            default: 
-                break;
         }
     }
 
@@ -103,7 +102,14 @@ public partial class BuildingManager : Node {
     }
 
     private void DestroyBuildingAtHoveredCellPosition() {
+        var buildingComponent = GetTree().GetNodesInGroup(nameof(BuildingComponent))
+            .Cast<BuildingComponent>()
+            .FirstOrDefault(buildingComponent => buildingComponent.GetGridCellPosition() == _hoverGridCell);
+        if (buildingComponent == null) return;
         
+        _currentlyUsedResourceTilesCount -= buildingComponent.BuildingResource.ResourceCost;
+        
+        buildingComponent.Destroy();
     }
     
     private void ClearBuildingGhost() {
@@ -124,8 +130,6 @@ public partial class BuildingManager : Node {
                 break;
             case State.PlacingBuilding:
                 UpdateGridDisplay();
-                break;
-            default:
                 break;
         }
     }
