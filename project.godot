@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="grid-wars"
-run/main_scene="uid://03jp280jsmnq"
+run/main_scene="uid://cba3tu78lhmq8"
 config/features=PackedStringArray("4.6", "C#", "GL Compatibility")
 config/icon="res://icon.svg"
 

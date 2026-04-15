@@ -22,6 +22,19 @@ public partial class BuildingComponent : Node2D {
         gridPosition = gridPosition.Floor();
         return new Vector2I((int)gridPosition.X, (int)gridPosition.Y);
     }
+
+    public List<Vector2I> GetOccupiedCellPosition() {
+        var result = new List<Vector2I>();
+        var gridPosition = GetGridCellPosition();
+
+        for (int x = gridPosition.X; x < gridPosition.X + BuildingResource.Dimensions.X; x++) {
+            for (int Y = gridPosition.Y; Y < gridPosition.Y + BuildingResource.Dimensions.Y; Y++) {
+                result.Add(new Vector2I(x, Y));
+            }
+        }
+        
+        return result;
+    }
     
     public void Destroy() {
         GameEvents.EmitBuildingDestroyed(this);

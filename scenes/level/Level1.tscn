@@ -38,11 +38,7 @@ tile_map_data = PackedByteArray("AAAHAAMAAQAAAAAAAAAJAAMAAQAAAAAAAAAJAAQAAQAAAAA
 tile_set = ExtResource("2_sstno")
 
 [node name="Base" parent="YSortRoot" parent_id_path=PackedInt32Array(2044056981) index="1" unique_id=209765780]
-position = Vector2(192, 320)
+position = Vector2(0, 320)
 
 [node name="GoldMine" parent="YSortRoot" parent_id_path=PackedInt32Array(2044056981) index="2" unique_id=103546256]
 position = Vector2(832, 256)
-
-[node name="GameUI" parent="." index="5" unique_id=1162931020]
-offset_left = 64.0
-offset_right = 64.0

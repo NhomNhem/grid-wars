@@ -17,7 +17,7 @@ public partial class BaseLevel : Node {
         _goldMine = GetNode<GoldMine>("%GoldMine");
         _gameCamera = GetNode<GameCamera>("GameCamera");
         _baseTerrainTileMapLayer = GetNode<TileMapLayer>("%BaseTerrainTileMapLayer");
-        _baseBuilding = GetNode<Node2D>("%BaseLevel");
+        _baseBuilding = GetNode<Node2D>("%Base");
         
         _gameCamera.SetBoundingRect(_baseTerrainTileMapLayer.GetUsedRect());
         _gameCamera.CenterOnPosition(_baseBuilding.GlobalPosition);
