@@ -7,29 +7,28 @@ public partial class GameUI : CanvasLayer {
    
 
     [Export] private BuildingResource[] _buildingResources;
+    [Export] private PackedScene _buildingSectionScene;
     
     [Signal] public delegate void BuildingResourceSelectedEventHandler(BuildingResource buildingResource);
     
-    private HBoxContainer _hBoxContainer;
+    private VBoxContainer _buildingSectionContainer;
 
     public override void _Ready() {
-       _hBoxContainer = GetNode<HBoxContainer>("MarginContainer/HBoxContainer");
-       CreateBuildingButtons();
+       _buildingSectionContainer = GetNode<VBoxContainer>("%BuildingSectionContainer");
+       CreateBuildingSection();
        
        
     }
     
-    private void CreateBuildingButtons() {
+    private void CreateBuildingSection() {
         foreach (var buildingResource in _buildingResources) {
-            var buildingButton = new Button();
-            buildingButton.Text = $"Place {buildingResource.DisplayName}";
-            _hBoxContainer.AddChild(buildingButton);
+            var buildingSection = _buildingSectionScene.Instantiate<BuildingSection>();
+            _buildingSectionContainer.AddChild(buildingSection);
+            buildingSection.SetBuildingResource(buildingResource);
             
-            buildingButton.Pressed += () => {
+            buildingSection.SelectButtonPressed += () => {
                 EmitSignal(SignalName.BuildingResourceSelected, buildingResource);
             };
         }
     }
-    
-    
 }

@@ -123,22 +123,8 @@ public partial class BuildingManager : Node {
         }
     }
     private bool IsBuildingPlaceableAtArea(Rect2I tileArea) {
-        var tilesInArea = GetTilePositionsInArea(tileArea);
-        var allTilesInBuildable = tilesInArea.All(tile => _gridManager.IsTilePositionBuildable(tile));
-        return AvailableResourceCount >= _toPlaceBuildingResource.ResourceCost &&
-               allTilesInBuildable;
-    }
-
-    private List<Vector2I> GetTilePositionsInArea(Rect2I tileArea) {
-        var result = new List<Vector2I>();
-
-        for (int x = tileArea.Position.X; x < tileArea.End.X; x++) {
-            for (int y = tileArea.Position.Y; y < tileArea.End.Y; y++) {
-                result.Add(new Vector2I(x, y));
-            }
-        }
-        
-        return result;
+        var allTilesInBuildable = _gridManager.IsTileAreaBuildable(tileArea);
+        return AvailableResourceCount >= _toPlaceBuildingResource.ResourceCost && allTilesInBuildable;
     }
     
     private void UpdateHoveredGridArea() {

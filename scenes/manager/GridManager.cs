@@ -1,5 +1,6 @@
 ﻿using Game.Autoload;
 using Game.components;
+using Game.level.util;
 using Godot;
 
 namespace Game.manager;
@@ -18,6 +19,7 @@ public partial class GridManager : Node {
     private readonly HashSet<Vector2I> _validBuildableTiles = new();
     private readonly HashSet<Vector2I> _collectResourceTiles = new();
     private readonly HashSet<Vector2I> _occupiedTiles = new();
+    public readonly Dictionary<TileMapLayer, ElevationLayer> _tileMapLayerToElevationLayer = new();
     
     private List<TileMapLayer> _allTileMapLayers = new();
 
@@ -25,15 +27,16 @@ public partial class GridManager : Node {
         GameEvents.Instance.BuildingPlaced += OnBuildingPlaced;
         GameEvents.Instance.BuildingDestroyed += OnBuildingDestroyed;
         _allTileMapLayers = GetAllTileMapLayers(_baseTerrainTileMapLayer);
+        MapTileMapLayersToElevationLayers();
     }
 
-    private bool TileHasCustomData(Vector2I tilePos, string customDataName) {
+    private (TileMapLayer, bool) GetTileHasCustomData(Vector2I tilePos, string customDataName) {
         foreach (var layer in _allTileMapLayers) {
             var customData = layer.GetCellTileData(tilePos);
             if (customData == null || (bool)customData.GetCustomData(IS_IGNORE)) continue;
-            return (bool)customData.GetCustomData(customDataName);
+            return (layer, (bool)customData.GetCustomData(customDataName));
         }
-        return false;
+        return (null,false);
     }
 
     public void HighlightBuildableTiles() {
@@ -73,17 +76,47 @@ public partial class GridManager : Node {
 
     public bool IsTilePositionBuildable(Vector2I tilePos) => _validBuildableTiles.Contains(tilePos);
 
-    private List<TileMapLayer> GetAllTileMapLayers(TileMapLayer rootTileMapLayer) {
+    public bool IsTileAreaBuildable(Rect2I tileArea){
+        var tiles = tileArea.ToTiles();
+        if (tiles.Count == 0) return false;
+        
+        (TileMapLayer firstTileMapLayer, _) = GetTileHasCustomData(tiles[0], IS_BUILDABLE);
+        var targetElevationLayer = _tileMapLayerToElevationLayer[firstTileMapLayer];
+        
+        return tiles.All(tilePosition => {
+            (TileMapLayer tileMapLayerToElevationLayer, bool isBuildable ) = GetTileHasCustomData(tilePosition, IS_BUILDABLE);
+            var elevationLayer = _tileMapLayerToElevationLayer[tileMapLayerToElevationLayer];
+            return isBuildable && _validBuildableTiles.Contains(tilePosition) && elevationLayer == targetElevationLayer;
+        });
+    }
+
+    private List<TileMapLayer> GetAllTileMapLayers(Node2D rootNode) {
         var result = new List<TileMapLayer>();
-        var children = rootTileMapLayer.GetChildren();
+        var children = rootNode.GetChildren();
         children.Reverse();
         foreach (var child in children)
-            if (child is TileMapLayer childLayer) {
-                result.AddRange(GetAllTileMapLayers(childLayer));
+            if (child is Node2D childNode) {
+                result.AddRange(GetAllTileMapLayers(childNode));
             }
 
-        result.Add(rootTileMapLayer);
+        if (rootNode is TileMapLayer tileMapLayer)
+            result.Add(tileMapLayer);
+            
         return result;
+    }
+
+    private void MapTileMapLayersToElevationLayers() {
+        foreach (var layer in _allTileMapLayers) {
+            ElevationLayer elevationLayer;
+            Node startNode = layer;
+            do {
+                var parent = startNode.GetParent();
+                elevationLayer = parent as ElevationLayer;
+                startNode = parent;
+            }while(elevationLayer == null && startNode != null);
+            
+            _tileMapLayerToElevationLayer[layer] = elevationLayer;
+        }
     }
 
     private void UpdateValidBuildableTiles(BuildingComponent buildingComponent) {
@@ -126,13 +159,22 @@ public partial class GridManager : Node {
         EmitSignal(SignalName.GridStateUpdated);
     }
 
+    private bool IsTileInsideCircle(Vector2 centerPosition, Vector2 tilePosition, float radius) {
+        var distanceX = centerPosition.X - (tilePosition.X + 0.5f);
+        var distanceY = centerPosition.Y - tilePosition.Y + 0.5f;
+        var distanceSquared = distanceX * distanceX + distanceY * distanceY;
+        return distanceSquared <= radius * radius;
+    }
+    
     private List<Vector2I> GetTilesInRadius(Rect2I tileArea, int radius, Func<Vector2I, bool> filterFn) {
         var result = new List<Vector2I>();
-
+        var tileAreaF = tileArea.ToRect2F();
+        var tileAreaCenter = tileAreaF.GetCenter();
+        var radiusMod = Mathf.Max(tileAreaF.Size.X, tileAreaF.Size.Y) / 2;
         for (var x = tileArea.Position.X - radius; x <= tileArea.End.X + radius; x++)
         for (var y = tileArea.Position.Y - radius; y <= tileArea.End.Y + radius; y++) {
             var tilePos = new Vector2I(x, y);
-            if (!filterFn(tilePos)) continue;
+            if (!IsTileInsideCircle(tileAreaCenter, tilePos, radius + radiusMod) || !filterFn(tilePos)) continue;
             result.Add(tilePos);
         }
 
@@ -141,11 +183,11 @@ public partial class GridManager : Node {
     
     private List<Vector2I> GetValidTilesInRadius(Rect2I tileArea, int radius) 
         => GetTilesInRadius(tileArea, radius, (tilePos) 
-            => TileHasCustomData(tilePos, IS_BUILDABLE));
+            => GetTileHasCustomData(tilePos, IS_BUILDABLE).Item2);
 
     private List<Vector2I> GetResourceTileInRadius(Rect2I tileArea, int radius) 
         => GetTilesInRadius(tileArea, radius, (tilePos)
-            => TileHasCustomData(tilePos, IS_WOODED));
+            => GetTileHasCustomData(tilePos, IS_WOODED).Item2);
 
     private void OnBuildingPlaced(BuildingComponent buildingComponent) {
         UpdateValidBuildableTiles(buildingComponent);

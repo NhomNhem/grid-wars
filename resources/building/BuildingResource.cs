@@ -6,6 +6,7 @@ namespace Game.resources.building;
 public partial class BuildingResource : Resource {
     
     [Export] public string DisplayName { get; private set; }
+    [Export] public string Description { get; private set; }
     [Export] public bool IsDeletable { get; private set; } = true;
     [Export] public Vector2I Dimensions { get; private set; } = Vector2I.One;
     [Export] public int ResourceCost { get; private set; }
