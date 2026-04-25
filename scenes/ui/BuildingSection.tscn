@@ -57,7 +57,7 @@ layout_mode = 2
 theme_override_colors/font_shadow_color = Color(0.61960787, 0.5294118, 0.4627451, 1)
 theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 1
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 16
 text = "Gathers wood
 "
 horizontal_alignment = 1

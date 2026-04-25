@@ -11,6 +11,8 @@ public partial class BuildingManager : Node {
     private readonly StringName ACTION_CANCELED = "cancle";
     private readonly StringName ACTION_RIGHT_CLICK = "right_click";
     
+    [Signal] public delegate void AvailableResourceCountChangedEventHandler(int availableResourceCount);
+    
     private enum State {
         Normal,
         PlacingBuilding
@@ -35,6 +37,10 @@ public partial class BuildingManager : Node {
     public override void _Ready() {
         _gameUI.BuildingResourceSelected += OnBuildingResourceSelected;
         _gridManager.ResourceTilesUpdated += OnResourceTilesUpdated;
+        
+        
+        Callable.From(() => EmitSignal(SignalName.AvailableResourceCountChanged, AvailableResourceCount)).CallDeferred();
+        
     }
 
     public override void _Process(double delta) {
@@ -100,6 +106,8 @@ public partial class BuildingManager : Node {
         _currentlyUsedResourceTilesCount += _toPlaceBuildingResource.ResourceCost;
 
         ChangeState(State.Normal);
+        
+        EmitSignal(SignalName.AvailableResourceCountChanged, AvailableResourceCount);
     }
 
     private void DestroyBuildingAtHoveredCellPosition() {
@@ -113,6 +121,7 @@ public partial class BuildingManager : Node {
         _currentlyUsedResourceTilesCount -= buildingComponent.BuildingResource.ResourceCost;
         
         buildingComponent.Destroy();
+        EmitSignal(SignalName.AvailableResourceCountChanged, AvailableResourceCount);
     }
     
     private void ClearBuildingGhost() {
@@ -161,6 +170,7 @@ public partial class BuildingManager : Node {
     
     private void OnResourceTilesUpdated(int resourceCount) {
         _currentResourceTilesCount = resourceCount;
+        EmitSignal(SignalName.AvailableResourceCountChanged, AvailableResourceCount);
     }
 
     private void OnBuildingResourceSelected(BuildingResource buildingResource) {

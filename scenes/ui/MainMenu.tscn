@@ -1,0 +1,53 @@
+[gd_scene format=3 uid="uid://dh5uwshlggyyr"]
+
+[ext_resource type="PackedScene" uid="uid://03jp280jsmnq" path="res://scenes/level/BaseLevel.tscn" id="1_vjtqc"]
+
+[node name="MainMenu" type="Node" unique_id=1848731641]
+
+[node name="BaseLevel" parent="." unique_id=888678502 instance=ExtResource("1_vjtqc")]
+
+[node name="GameUI" parent="BaseLevel" index="2" unique_id=1162931020]
+visible = false
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1929939134]
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer" unique_id=493745422]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/MarginContainer" unique_id=1623654115]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/MarginContainer/PanelContainer" unique_id=444661173]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MarginContainer/PanelContainer/MarginContainer" unique_id=410406222]
+custom_minimum_size = Vector2(192, 0)
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Button" type="Button" parent="CanvasLayer/MarginContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=501366104]
+layout_mode = 2
+text = "Play
+"
+
+[node name="Button2" type="Button" parent="CanvasLayer/MarginContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=623727019]
+layout_mode = 2
+text = "Options
+"
+
+[node name="Button3" type="Button" parent="CanvasLayer/MarginContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1454602927]
+layout_mode = 2
+text = "Quit
+"
+
+[editable path="BaseLevel"]

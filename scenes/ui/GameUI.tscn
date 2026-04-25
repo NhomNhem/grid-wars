@@ -4,6 +4,11 @@
 [ext_resource type="Resource" uid="uid://cudyymjp2sn0t" path="res://resources/building/tower.tres" id="2_jwej7"]
 [ext_resource type="Resource" uid="uid://n7fopi35ijhk" path="res://resources/building/village.tres" id="3_xsfm0"]
 [ext_resource type="PackedScene" uid="uid://dm3b0t3dwjq3x" path="res://scenes/ui/BuildingSection.tscn" id="4_xsfm0"]
+[ext_resource type="Texture2D" uid="uid://drwa2kh43pb2e" path="res://assets/Tiny Swords (Update 010)/Resources/Resources/wood_icon.png" id="5_rv83x"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_627l5"]
+atlas = ExtResource("5_rv83x")
+region = Rect2(39, 74, 32, 26)
 
 [node name="GameUI" type="CanvasLayer" unique_id=73575299]
 script = ExtResource("1_oo06m")
@@ -28,10 +33,28 @@ size_flags_horizontal = 0
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/PanelContainer" unique_id=176887547]
 layout_mode = 2
 
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/PanelContainer/VBoxContainer" unique_id=1907956405]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/PanelContainer/VBoxContainer/HBoxContainer" unique_id=1969492148]
+layout_mode = 2
+size_flags_vertical = 8
+texture = SubResource("AtlasTexture_627l5")
+stretch_mode = 3
+
+[node name="ResourceLable" type="Label" parent="MarginContainer/PanelContainer/VBoxContainer/HBoxContainer" unique_id=1487954313]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0.61960787, 0.5294118, 0.4627451, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 48
+text = "4"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="BuildingSectionContainer" type="VBoxContainer" parent="MarginContainer/PanelContainer/VBoxContainer" unique_id=1689651541]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 16
-
-[node name="BuildingSection" parent="MarginContainer/PanelContainer/VBoxContainer/BuildingSectionContainer" unique_id=618822596 instance=ExtResource("4_xsfm0")]
-layout_mode = 2
